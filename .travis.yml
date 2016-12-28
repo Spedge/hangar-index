@@ -1,0 +1,46 @@
+sudo: required
+
+services:
+  - docker
+
+language: java
+
+jdk:
+  - oraclejdk8
+  
+after_success:
+  - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+  - export REPO=spedge/hangar-index
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+  - docker build -t $REPO:$COMMIT .
+  - docker tag $REPO:$COMMIT $REPO:$TAG
+  - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
+  - docker push $REPO
+  
+env:
+  global:
+    - secure: "bK60nx875hq5ywzmfK62zDdBc1IFYUnQSHtAirJ8VEbjVdwraAyOy7jRLmc5JxymOvWZSMFmkhMnn/omTHXOornKi
+Stnip3VMOEn+44phgchIElMHC6f822Hgc1C5uoC6O/c0Dq0XDs7fUISToHAheM6+nbppuRkHoQ6dENhs0dtn/4B3S5aBOSIXhjjz
+320N+InREO63wzEfCTDq4nAzX9xC5e/kPRt18xGYsvT9yKd6Z8PTfFfBQzqEshvYRPw5VQD55wK/rz9yBiifVopq0OOa5kbZg9c8
+Gym0ZgT7ZpYjLPRq5OgHpOFSU0sEqjlWTubqt5Xz0LNkx0IMxivXX8HWEt/c+wzFz+ekrOWF6itmIPg610ULxEA+ujE6So3fuBVM
+kpcqfVcR0LR6ZYj/tAFtjihCTqPlwFfUIakDl8jYwaybIk2OIRLrLmhTjOdzo95ezybDAoyKSC0X+oRAnltfuYbHpyiIs3ELsZ2j
+XRzYORdRp7b66/GaKglJ1Lc2kaS5E0OwNFS3AF7GazP09i6kokw+K4mI5dUN94MU/ul6Q5VLDHUZw6nH0l3vyqXOleQI6PKrDt4b
+myoZWTgTCT0RC8FyssOp1WVOykJJiwa9/PhwExS1y7zhzyXQLHKH8nYGRG3Pt+Ybge29LYQuNOdNcJxKd8hFDDjPr9fNNo=" #DOCKER_EMAIL
+
+    - secure: "EAT/ym4p3R0+uvJBr++YoXxP/TFD2rOUwpLT/gQqF349OW9Af6EwBMGc2lRjU9qv5MOOm2I5hDz1/wT7zdJJaeDZa
+d+eycZRRrSPmR4UIRx2S051iglYG/nCavfFCwhc+O3bHQP2r9AxMaGJDp6Acn1CfrUbA8aa9bjPWelwleMBb0boKHopKfguTqKDM
+I6gOhC7+GyIVMOVTE0RfoBORVO+5svwoXecL/KH8nvC5v8F1tw/pFkTEkLLS0596lp71VJuyvs+Qi+DNAkh9Ycac+nst4UUklFdN
+lGSCNAsE+20ioD/y/UteCQK+nSKKlWsTLP07LmNxMRcBwh9eam4Ti1NqezlHOP6mmvWgt+Sjf0LggSdtHz0EORxcDOw2S0E4/9JZ
+9w4MzPBaH4vqkDD7y2zEwjOFLXAVu3zLBviJB2dZG1TQygoLe6TQ+6PNZAxD2Fsj+ZicVJYzeoVjnuZVcG+5HtFkYajRXmF3SkeU
+ZQQNnQVSV3K2fmHnXJmy2nFW3BtPVKDoj8MvbPLemPxPerV7/+yW/8pCnydIFU4SBrcPWhewlxM9Tqi1PK3ImpciGA/xU9RQEAXw
+8yDOv1SDw0ttND+ktfcsjhRWz9Jao80nGPw3/HnOaBWCy91PdcJ6mB2zzwVJA0oq92GLD+Gwn1KTF1QlvD54gWc6DJPtPY=" #DOCKER_USER
+
+    - secure: "GD9UoOFtlAhEjPXh6/LjO5Oc6rr/h+9RuGDJE2BtcJMNTd2g2x3t1dhfFVvyrf/9QR7xvqWpC9UspsTrCll7NWwQI
+8D6ek+NIg4DWqoDDIcnI7pKAjCLpgdO87H+5udcMOhvGFpVT2qriA/ugvfI9598YCIGePqdwjspp90E6z5vf7Z6+x2UfN5BhKHb6
+PnTl8hA2cpoKjbZogjRrsQHGYeBQULg+ADBgJrRgXOHc5on7BQdofeo/ttrpOMxnIf0o0FMTgEwLyWXrxRCfpMsPY6PaMvm7w17y
+QJuFRjRsEsHNdiaqtr5+xuvqdovgR2GrcFAeuOyMoQPKl2qCP+SUiwlxEinrj0UbBt2oxdK2ImuTY489nf0rEIMsA9f5MDHp5C6G
+KFZzmFUFEbouZWP6HEzO2kM1HZdqX4ENL5Rr3pq7h0T9efdWGUoP4YTjBdfVHJgkU76qqSClLX23gw6P5ys9rQR/w+xoMbKISFV9
+UjoYRpCl4e8kLG1VT3HxhQ/OzQofmFrOuev4e6BMqR1oBHx81Pblv/ABW/rEq8sPTp5L9jluWYP1oLcaacJ01EELslphE2zrtCJ0
+vhuo9PApe6sZ09dMXXNaAmF8vIJgZSD1UZ0iBcQrylWzb7K4+psfZ0fxQEN8CDRDixaDje4VkWVwS0Qu2c8bPQgcoVgp/w=" # DOCKER_PASS
+
+    - COMMIT=${TRAVIS_COMMIT::8}
